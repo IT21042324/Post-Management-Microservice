@@ -1,4 +1,3 @@
-const post = require("../model/post");
 const postModel = require("../model/post");
 
 const createPost = async (req, res) => {
@@ -45,24 +44,6 @@ const updatePostById = async (req, res) => {
   }
 };
 
-const postCommmentForPost = async (req, res) => {
-  const postId = req.params.id;
-  const comment = req.body.comment;
-  const userID = req.body.userID;
-
-  try {
-    const updatedPost = await postModel.findByIdAndDelete(
-      postId,
-      { $push: { comments: { userID, comment } } },
-      { new: true }
-    );
-
-    res.json(updatedPost);
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
 const fetchAllCommentsForPost = async (req, res) => {
   try {
     const postComments = await postModel.findById(req.params.id, "comments");
@@ -76,6 +57,60 @@ const fetchAllCommentsForPost = async (req, res) => {
   }
 };
 
+const postCommmentForPost = async (req, res) => {
+  const postID = req.params.id;
+  const commentID = req.body.commendID;
+  const userID = req.body.userID;
+
+  try {
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postID,
+      { $push: { comments: { userID, commentID } } },
+      { new: true }
+    );
+
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const removeCommentFromPost = async (req, res) => {
+  const postID = req.params.id;
+  const commentID = req.body.commentID;
+
+  try {
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postID,
+      { $pull: { comments: { commentID } } },
+      { new: true }
+    );
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const getAllPostWithDetails = async (req, res) => {
+  try {
+    const posts = await postModel.find().populate("comments.commentID");
+    res.json(posts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const getSinglePostWithDetails = async (req, res) => {
+  try {
+    const post = await postModel
+      .findById(req.params.id)
+      .populate("comments.commentID");
+    res.json(post);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -83,4 +118,7 @@ module.exports = {
   updatePostById,
   fetchAllCommentsForPost,
   postCommmentForPost,
+  removeCommentFromPost,
+  getAllPostWithDetails,
+  getSinglePostWithDetails,
 };
