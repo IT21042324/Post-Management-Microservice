@@ -44,6 +44,17 @@ const updatePostById = async (req, res) => {
   }
 };
 
+const deletePostById = async (req, res) => {
+  const postID = req.params.id;
+
+  try {
+    const deletedPost = await postModel.findByIdAndDelete(postID);
+    res.json(deletedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 const fetchAllCommentsForPost = async (req, res) => {
   try {
     const postComments = await postModel
@@ -84,7 +95,7 @@ const removeCommentFromPost = async (req, res) => {
   try {
     const updatedPost = await postModel.findByIdAndUpdate(
       postID,
-      { $pull: { comments: { commentID } } },
+      { $pull: { comments: commentID } },
       { new: true }
     );
     res.json(updatedPost);
@@ -130,6 +141,7 @@ module.exports = {
   getPostById,
   updatePostById,
   fetchAllCommentsForPost,
+  deletePostById,
   postCommmentForPost,
   removeCommentFromPost,
   getAllPostWithDetails,

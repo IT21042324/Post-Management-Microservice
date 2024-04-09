@@ -12,6 +12,7 @@ const {
   getAllPostWithDetails,
   getSinglePostWithDetails,
   getAllPostIdWithUserID,
+  deletePostById,
 } = require("../controller/post");
 
 // Create new post
@@ -37,13 +38,16 @@ router.get("/comments/:id", fetchAllCommentsForPost);
 router.patch("/comments/:id", postCommmentForPost);
 
 // Remove a comment from a post
-router.delete("/comments/:id", removeCommentFromPost);
+router.patch("/comments/delete/:id", removeCommentFromPost);
 
 // Get a post by ID
 router.get("/:id", getPostById);
 
 // Update a post by ID
 router.patch("/:id", updatePostById);
+
+//Delete a post by ID
+router.delete("/:id", deletePostById);
 
 // Export router
 module.exports = router;
