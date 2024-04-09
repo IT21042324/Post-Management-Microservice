@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const userRouter = require("./routes/user");
+const postRouter = require("./routes/post");
 
 //Creating an express app
 const app = express();
@@ -31,4 +32,7 @@ mongoose
   });
 
 // Set up route for handling requests to /api/user endpoint
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
+
+// Set up route for handling requests to /api/user endpoint
+app.use("/api/posts", postRouter);
