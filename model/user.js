@@ -4,63 +4,66 @@ const validator = require("validator");
 
 const bcrypt = require("bcryptjs");
 
-const userSchema = new Schema({
-  userName: {
-    type: String,
-    required: true,
+const userSchema = new Schema(
+  {
+    userName: {
+      type: String,
+      required: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    about: String,
+
+    jobRole: String,
+
+    skills: {
+      type: Array,
+      default: [],
+    },
+
+    token: { type: String, default: "None" },
+
+    followers: {
+      type: Array,
+      default: [],
+    },
+
+    following: {
+      type: Array,
+      default: [],
+    },
+
+    accStatus: {
+      type: Boolean,
+      default: 1,
+    },
+
+    loginStatus: {
+      type: Boolean,
+      default: 0,
+    },
+
+    twoFactorAuthenticationStatus: {
+      type: Boolean,
+      default: 0,
+    },
+
+    posts: {
+      type: Array,
+      default: [],
+    },
+
+    likedPosts: {
+      type: Array,
+      default: [],
+    },
   },
-
-  password: {
-    type: String,
-    required: true,
-  },
-
-  about: String,
-
-  jobRole: String,
-
-  skills: {
-    type: Array,
-    default: [],
-  },
-
-  token: { type: String, default: "None" },
-
-  followers: {
-    type: Array,
-    default: [],
-  },
-
-  following: {
-    type: Array,
-    default: [],
-  },
-
-  accStatus: {
-    type: Boolean,
-    default: 1,
-  },
-
-  loginStatus: {
-    type: Boolean,
-    default: 0,
-  },
-
-  twoFactorAuthenticationStatus: {
-    type: Boolean,
-    default: 0,
-  },
-
-  posts: {
-    type: Array,
-    default: [],
-  },
-
-  likedPosts: {
-    type: Array,
-    default: [],
-  },
-});
+  { timestamps: true }
+);
 
 //Creating User schema functions
 userSchema.statics.signup = async function (userName, password) {
