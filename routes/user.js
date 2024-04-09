@@ -41,4 +41,4 @@ router.patch("/addSkills/:id", addSkills);
 router.get("/skills/:id", getAllSkillsOfUser);
 
 // Export router
-router.module.exports = router;
+module.exports = router;
