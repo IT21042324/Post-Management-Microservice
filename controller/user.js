@@ -35,11 +35,11 @@ const userLogin = async (req, res) => {
 
 const userSignUp = async function (req, res) {
   // Get user details from request body
-  const { userName, password } = req.body;
+  const { userName } = req.body;
 
   try {
     // Create new user using userModel's signup method
-    const user = await userModel.signup(userName, password);
+    const user = await userModel.signup(req.body);
 
     // Create JWT for new user
     const token = createToken(user._id);
@@ -55,6 +55,17 @@ const userSignUp = async function (req, res) {
   } catch (err) {
     console.log(err.message);
     res.json({ err: err.message });
+  }
+};
+
+const fetchUserByID = async function (req, res) {
+  const userId = req.params.id;
+
+  try {
+    const user = await userModel.findById(userId);
+    res.json(user);
+  } catch (err) {
+    res.send(err.message);
   }
 };
 
@@ -160,15 +171,26 @@ const getAllSkillsOfUser = async (req, res) => {
   }
 };
 
+const getAllUserIds = async (req, res) => {
+  try {
+    const users = await userModel.find({}, "_id"); // Only fetch the _id field
+    res.json(users.map((usr) => usr._id));
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 // Export functions for use in other files
 module.exports = {
   userSignUp,
   userLogin,
   getAllUsers,
+  fetchUserByID,
   logout,
   addPostToUser,
   getAllPostsMadeByUser,
   updateAboutSection,
   addSkills,
   getAllSkillsOfUser,
+  getAllUserIds,
 };

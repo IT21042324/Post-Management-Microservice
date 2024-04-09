@@ -20,8 +20,7 @@ const postSchema = new Schema(
 
     //Single user can have only a single emoji to represent his likes. so it has to be consisitently updated for a post
     likes: {
-      type: Array,
-      default: [
+      type: [
         {
           userID: {
             type: Schema.Types.ObjectId,
@@ -37,19 +36,13 @@ const postSchema = new Schema(
 
     // Single user can have many comments for a single post. or they can update the exisiting post if they want.
     comments: {
-      type: Array,
-      default: [
+      type: [
         {
-          userID: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-          },
-          commentID: {
-            type: Schema.Types.ObjectId,
-            ref: "Comment",
-          },
+          type: Schema.Types.ObjectId,
+          ref: "Comment",
         },
       ],
+      default: [],
     },
 
     postStatus: {

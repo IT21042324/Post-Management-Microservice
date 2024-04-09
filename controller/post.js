@@ -46,7 +46,9 @@ const updatePostById = async (req, res) => {
 
 const fetchAllCommentsForPost = async (req, res) => {
   try {
-    const postComments = await postModel.findById(req.params.id, "comments");
+    const postComments = await postModel
+      .findById(req.params.id, "comments")
+      .populate("comments.commentID");
     res.json({
       postID: req.params.id,
       postComments,
@@ -65,7 +67,7 @@ const postCommmentForPost = async (req, res) => {
   try {
     const updatedPost = await postModel.findByIdAndUpdate(
       postID,
-      { $push: { comments: { userID, commentID } } },
+      { $push: { comments: { commentID } } },
       { new: true }
     );
 
@@ -93,7 +95,7 @@ const removeCommentFromPost = async (req, res) => {
 
 const getAllPostWithDetails = async (req, res) => {
   try {
-    const posts = await postModel.find().populate("comments.commentID");
+    const posts = await postModel.find().populate("comments");
     res.json(posts);
   } catch (err) {
     res.send(err.message);
@@ -102,10 +104,21 @@ const getAllPostWithDetails = async (req, res) => {
 
 const getSinglePostWithDetails = async (req, res) => {
   try {
-    const post = await postModel
-      .findById(req.params.id)
-      .populate("comments.commentID");
+    const post = await postModel.findById(req.params.id).populate("comments");
+
     res.json(post);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//Extra Endpoint
+//Get all postID with UserIds
+
+const getAllPostIdWithUserID = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
+    res.json(posts);
   } catch (err) {
     res.send(err.message);
   }
@@ -121,4 +134,5 @@ module.exports = {
   removeCommentFromPost,
   getAllPostWithDetails,
   getSinglePostWithDetails,
+  getAllPostIdWithUserID,
 };

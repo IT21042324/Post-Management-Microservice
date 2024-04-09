@@ -11,6 +11,8 @@ const {
   updateAboutSection,
   addSkills,
   getAllSkillsOfUser,
+  fetchUserByID,
+  getAllUserIds,
 } = require("../controller/user");
 
 // User login route
@@ -21,6 +23,12 @@ router.post("/signup", userSignUp);
 
 // Get all users route
 router.get("/", getAllUsers);
+
+//Get all user ids
+router.get("/ids", getAllUserIds);
+
+//Get User by id
+router.get("/:id", fetchUserByID);
 
 //Logout a specific user
 router.patch("/logout/:id", logout);

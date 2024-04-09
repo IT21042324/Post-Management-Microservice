@@ -11,6 +11,7 @@ const {
   removeCommentFromPost,
   getAllPostWithDetails,
   getSinglePostWithDetails,
+  getAllPostIdWithUserID,
 } = require("../controller/post");
 
 // Create new post
@@ -19,26 +20,30 @@ router.post("/", createPost);
 // Get all posts
 router.get("/", getAllPosts);
 
-// Get a post by ID
-router.get("/:id", getPostById);
-
-// Update a post by ID
-router.patch("/:id", updatePostById);
-
-// Fetch all comments for a post
-router.get("/:id/comments", fetchAllCommentsForPost);
-
-// Post a comment for a post
-router.patch("/:id/comments", postCommmentForPost);
-
-// Remove a comment from a post
-router.delete("/:id/comments", removeCommentFromPost);
+//Extra route
+//Get all postIDs with UserIDs
+router.get("/users/ids", getAllPostIdWithUserID);
 
 // Get all posts with details
 router.get("/details", getAllPostWithDetails);
 
 // Get a single post with details
-router.get("/:id/details", getSinglePostWithDetails);
+router.get("/details/:id", getSinglePostWithDetails);
+
+// Fetch all comments for a post
+router.get("/comments/:id", fetchAllCommentsForPost);
+
+// Post a comment for a post
+router.patch("/comments/:id", postCommmentForPost);
+
+// Remove a comment from a post
+router.delete("/comments/:id", removeCommentFromPost);
+
+// Get a post by ID
+router.get("/:id", getPostById);
+
+// Update a post by ID
+router.patch("/:id", updatePostById);
 
 // Export router
 module.exports = router;

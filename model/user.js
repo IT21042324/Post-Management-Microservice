@@ -66,12 +66,16 @@ const userSchema = new Schema(
 );
 
 //Creating User schema functions
-userSchema.statics.signup = async function (userName, password) {
+userSchema.statics.signup = async function (details) {
+  const { userName, password } = details;
+
   if (!userName || !password) throw Error("Username or password missing");
 
   if (!validator.isEmail(userName)) throw Error("Email is invalid");
 
-  const exist = await this.find({ userName });
+  const exist = await this.findOne({ userName });
+
+  console.log(exist);
 
   if (exist) throw Error("Email is already in use");
 
@@ -81,6 +85,7 @@ userSchema.statics.signup = async function (userName, password) {
   const singedUser = await this.create({
     userName,
     password: hash,
+    ...details,
   });
 
   return singedUser; //To return a signedup new user object
