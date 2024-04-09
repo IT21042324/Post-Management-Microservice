@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const validator = require("validator");
 
 const bcrypt = require("bcryptjs");
-const { type } = require("os");
 
 const userSchema = new Schema({
   userName: {
