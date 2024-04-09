@@ -19,8 +19,14 @@ const userLogin = async (req, res) => {
     // Create JWT for authenticated user
     const token = createToken(user._id);
 
-    // Send JWT and user data in response
-    res.json({ ...user.toObject(), token });
+    const tokenUpdatedUser = await userModel.findOneAndUpdate(
+      { userName },
+      { token, loginStatus: 1 },
+      { new: true }
+    );
+
+    //send JWT and user data in response
+    res.json({ ...tokenUpdatedUser.toObject() });
   } catch (err) {
     console.log(err.message);
     res.json({ err: err.message });
@@ -38,8 +44,14 @@ const userSignUp = async function (req, res) {
     // Create JWT for new user
     const token = createToken(user._id);
 
-    // Send JWT and user data in response
-    res.json({ ...user.toObject(), token });
+    const tokenUpdatedUser = await userModel.findOneAndUpdate(
+      { userName },
+      { token, loginStatus: 1 },
+      { new: true }
+    );
+
+    //send JWT and user data in response
+    res.json({ ...tokenUpdatedUser.toObject() });
   } catch (err) {
     console.log(err.message);
     res.json({ err: err.message });
@@ -58,9 +70,105 @@ const getAllUsers = async function (req, res) {
   }
 };
 
+const logout = (req, res) => {
+  const userId = req.params.id;
+
+  const objToUpdate = {
+    token: "None",
+    loginStatus: 0,
+  };
+
+  try {
+    const loggedOutUser = userModel.findByIdAndUpdate(userId, objToUpdate, {
+      new: true,
+    });
+
+    res.json(loggedOutUser);
+  } catch (err) {}
+};
+
+const addPostToUser = async (req, res) => {
+  const userId = req.params.id;
+  const post = req.body;
+
+  try {
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { $push: { posts: post } },
+      { new: true }
+    );
+
+    res.json(updatedUser);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const getAllPostsMadeByUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const posts = await userModel.findById(userId, "posts");
+    res.json(posts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const updateAboutSection = async (req, res) => {
+  const userId = req.params.id;
+  const about = req.body.about;
+
+  try {
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { about },
+      { new: true }
+    );
+
+    res.json(updatedUser);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const addSkills = async (req, res) => {
+  const userId = req.params.id;
+  const skills = req.body.skills;
+
+  try {
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      { $push: { skills } },
+      { new: true }
+    );
+
+    res.json(updatedUser);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const getAllSkillsOfUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const skills = await userModel.findById(userId, "skills");
+    res.json(skills);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 // Export functions for use in other files
 module.exports = {
   userSignUp,
   userLogin,
   getAllUsers,
+  logout,
+  addPostToUser,
+  getAllPostsMadeByUser,
+  updateAboutSection,
+  addSkills,
+  getAllSkillsOfUser,
 };

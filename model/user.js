@@ -10,24 +10,56 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+
   password: {
     type: String,
     required: true,
   },
+
+  about: String,
+
+  jobRole: String,
+
+  skills: {
+    type: Array,
+    default: [],
+  },
+
   token: { type: String, default: "None" },
-  followers: Array,
-  following: Array,
+
+  followers: {
+    type: Array,
+    default: [],
+  },
+
+  following: {
+    type: Array,
+    default: [],
+  },
+
   accStatus: {
     type: Boolean,
     default: 1,
   },
+
   loginStatus: {
     type: Boolean,
     default: 0,
   },
+
   twoFactorAuthenticationStatus: {
     type: Boolean,
     default: 0,
+  },
+
+  posts: {
+    type: Array,
+    default: [],
+  },
+
+  likedPosts: {
+    type: Array,
+    default: [],
   },
 });
 
