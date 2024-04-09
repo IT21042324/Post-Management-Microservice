@@ -23,7 +23,7 @@ const postSchema = new Schema(
       type: Array,
       default: [
         {
-          userId: {
+          userID: {
             type: Schema.Types.ObjectId,
             ref: "User",
           },
@@ -40,7 +40,7 @@ const postSchema = new Schema(
       type: Array,
       default: [
         {
-          userId: {
+          userID: {
             type: Schema.Types.ObjectId,
             ref: "User",
           },
