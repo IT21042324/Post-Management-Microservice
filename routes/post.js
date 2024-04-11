@@ -16,6 +16,9 @@ const {
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
+  getPostTags,
+  updatePostTags,
+  deleteTag,
 } = require("../controller/post");
 
 // Create new post
@@ -61,6 +64,14 @@ router.patch("/visibilityList/:id", updateVisibilityMembersList);
 // Clear visibility members list by post ID
 router.patch("/visibilityList/clear/:id", clearVisibilityMembersList);
 
+// Get all tags for a post
+router.get("/:id/tags", getPostTags);
+
+// Update a post tags by ID
+router.patch("/:id/tags", updatePostTags);
+
+// Delete a tag from a post by ID
+router.delete("/:id/tags/:tagIndex", deleteTag);
 
 // Export router
 module.exports = router;

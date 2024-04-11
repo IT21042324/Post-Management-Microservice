@@ -210,6 +210,42 @@ const clearVisibilityMembersList = async (req, res) => {
   }
 };
 
+const getPostTags = async (req, res) => {
+  try {
+    const post = await postModel.findById(req.params.id).select('tags');
+    res.json(post.tags);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const updatePostTags = async (req, res) => {
+  const postId = req.params.id;
+  const updatedTags = req.body.tags;
+
+  try {
+    const post = await postModel.findById(postId);
+    post.tags = updatedTags;
+    const updatedPost = await post.save();
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+const deleteTag = async (req, res) => {
+  const postId = req.params.id;
+  const tagIndex = req.params.tagIndex;
+
+  try {
+    const post = await postModel.findById(postId);
+    post.tags.splice(tagIndex, 1);
+    const updatedPost = await post.save();
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
 
 module.exports = {
   createPost,
@@ -226,4 +262,7 @@ module.exports = {
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
+  getPostTags,
+  updatePostTags,
+  deleteTag,
 };
