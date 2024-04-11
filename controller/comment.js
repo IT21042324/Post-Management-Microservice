@@ -17,6 +17,30 @@ const createComment = async (req, res) => {
   }
 };
 
+const createMultipleComments = async (req, res) => {
+  const comments = req.body;
+
+  try {
+    const newComments = await Promise.all(
+      comments.map(async (element) => {
+        const newComment = await commentModel.create(element);
+
+        await postModel.findByIdAndUpdate(
+          element.postID,
+          { $push: { comments: newComment._id } },
+          { new: true }
+        );
+
+        return newComment;
+      })
+    );
+
+    res.json(newComments);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 const deleteComment = async (req, res) => {
   const commentID = req.params.id;
   const { postID } = req.body;
@@ -38,4 +62,5 @@ const deleteComment = async (req, res) => {
 module.exports = {
   createComment,
   deleteComment,
+  createMultipleComments,
 };
