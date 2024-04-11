@@ -123,12 +123,27 @@ const getSinglePostWithDetails = async (req, res) => {
   }
 };
 
-//Extra Endpoint
-//Get all postID with UserIds
+const searchPost = async (req, res) => {
+  const { searchQuery, userID } = req.body;
 
-const getAllPostIdWithUserID = async (req, res) => {
   try {
-    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
+    const posts = await postModel.find({
+      $or: [
+        { postTitle: { $regex: searchQuery, $options: "i" } },
+        { description: { $regex: searchQuery, $options: "i" } },
+        { postType: { $regex: searchQuery, $options: "i" } },
+        { tags: { $regex: searchQuery, $options: "i" } },
+      ],
+      $and: [
+        {
+          $or: [
+            { visibility: "public" },
+            { visibility: "private", visibilityMembersList: userID },
+          ],
+        },
+      ],
+    });
+
     res.json(posts);
   } catch (err) {
     res.send(err.message);
@@ -212,6 +227,42 @@ const clearVisibilityMembersList = async (req, res) => {
   }
 };
 
+//Extra Endpoint
+//1. Get all postID with UserIds
+
+const getAllPostIdWithUserID = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
+    res.json(posts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//2. Create Multiple Posts
+
+const createMultiplePosts = async (req, res) => {
+  const posts = req.body;
+
+  try {
+    const newPosts = await postModel.create(posts);
+    res.json(newPosts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//3. Get All Post IDS
+
+const getAllPostIDs = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { _id: 1 });
+    res.json(posts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -219,11 +270,14 @@ module.exports = {
   updatePostById,
   fetchAllCommentsForPost,
   deletePostById,
+  searchPost,
   postCommmentForPost,
   removeCommentFromPost,
   getAllPostWithDetails,
   getSinglePostWithDetails,
   getAllPostIdWithUserID,
+  createMultiplePosts,
+  getAllPostIDs,
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
