@@ -32,7 +32,7 @@ router.get("/", getAllPosts);
 
 //Extra route
 //Get all postIDs with UserIDs
-router.get("/users/ids", getAllPostIdWithUserID);
+router.get("/users/all/ids", getAllPostIdWithUserID);
 
 //Search for a post
 router.get("/search", searchPost);
@@ -52,6 +52,9 @@ router.patch("/:id/comments", postCommmentForPost);
 // Remove a comment from a post
 router.patch("/:id/comments/delete", removeCommentFromPost);
 
+//Get all Post IDS only
+router.get("/all/ids/", getAllPostIDs);
+
 // Get a post by ID
 router.get("/:id", getPostById);
 
@@ -60,9 +63,6 @@ router.patch("/:id", updatePostById);
 
 //Delete a post by ID
 router.delete("/:id", deletePostById);
-
-//Get all Post IDS only
-router.get("/ids", getAllPostIDs);
 
 //update post visibility
 router.patch("/:id/visibility", updateVisibility);

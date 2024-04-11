@@ -72,13 +72,12 @@ const fetchAllCommentsForPost = async (req, res) => {
 
 const postCommmentForPost = async (req, res) => {
   const postID = req.params.id;
-  const commentID = req.body.commendID;
-  const userID = req.body.userID;
+  const commentID = req.body.commentID;
 
   try {
     const updatedPost = await postModel.findByIdAndUpdate(
       postID,
-      { $push: { comments: { commentID } } },
+      { $push: { comments: commentID } },
       { new: true }
     );
 
@@ -257,7 +256,7 @@ const createMultiplePosts = async (req, res) => {
 const getAllPostIDs = async (req, res) => {
   try {
     const posts = await postModel.find({}, { _id: 1 });
-    res.json(posts);
+    res.json(posts.map((post) => post._id));
   } catch (err) {
     res.send(err.message);
   }
