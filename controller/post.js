@@ -126,21 +126,57 @@ const searchPost = async (req, res) => {
   const { searchQuery, userID } = req.body;
 
   try {
-    const posts = await postModel.find({
+    // Search in postTitle
+    const titlePosts = await postModel.find({
+      postTitle: { $regex: searchQuery?.trim(), $options: "i" },
       $or: [
-        { postTitle: { $regex: searchQuery, $options: "i" } },
-        { description: { $regex: searchQuery, $options: "i" } },
-        { postType: { $regex: searchQuery, $options: "i" } },
-        { tags: { $regex: searchQuery, $options: "i" } },
+        { visibility: "public" },
+        { visibility: "private", visibilityMembersList: userID },
       ],
-      $and: [
-        {
-          $or: [
-            { visibility: "public" },
-            { visibility: "private", visibilityMembersList: userID },
-          ],
-        },
+    });
+
+    // Search in description
+    const descriptionPosts = await postModel.find({
+      description: { $regex: searchQuery?.trim(), $options: "i" },
+      $or: [
+        { visibility: "public" },
+        { visibility: "private", visibilityMembersList: userID },
       ],
+    });
+
+    // Search in tags
+    const tagsPosts = await postModel.find({
+      tags: { $regex: searchQuery?.trim(), $options: "i" },
+      $or: [
+        { visibility: "public" },
+        { visibility: "private", visibilityMembersList: userID },
+      ],
+    });
+
+    // Search in postType
+    const typePosts = await postModel.find({
+      postType: { $regex: searchQuery?.trim(), $options: "i" },
+      $or: [
+        { visibility: "public" },
+        { visibility: "private", visibilityMembersList: userID },
+      ],
+    });
+
+    // Combine the results
+    let posts = [
+      ...titlePosts,
+      ...descriptionPosts,
+      ...tagsPosts,
+      ...typePosts,
+    ];
+
+    // Remove duplicates
+    const seen = new Set();
+
+    posts = posts.filter((post) => {
+      const duplicate = seen.has(post._id);
+      seen.add(post._id);
+      return !duplicate;
     });
 
     res.json(posts);
@@ -150,7 +186,6 @@ const searchPost = async (req, res) => {
 };
 
 //visibility of the post
-
 const updateVisibility = async (req, res) => {
   const { visibility } = req.body;
   const postId = req.params.id;
