@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../server"); // Import app
 
 let postId;
+let postedBy = "661580fea72308411e9c1e6d";
 
 describe("POST /api/posts", () => {
   it("should create a new post and return 200 status code", async () => {
@@ -9,11 +10,13 @@ describe("POST /api/posts", () => {
       postTitle: "Test Post",
       description: "This is a test post",
       postType: "Text",
+      postedBy,
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body.postTitle).toEqual("Test Post");
     expect(res.body.description).toEqual("This is a test post");
     expect(res.body.postType).toEqual("Text");
+    expect(res.body.postedBy).toEqual(postedBy);
 
     postId = res.body._id;
   });
