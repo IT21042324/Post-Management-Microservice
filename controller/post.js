@@ -210,6 +210,45 @@ const clearVisibilityMembersList = async (req, res) => {
   }
 };
 
+const updatePostStatus = async (req, res) => {
+  const { postStatus, reasonForBlocking } = req.body;
+  const postId = req.params.id;
+
+  try {
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postId,
+      { postStatus, reasonForBlocking },
+      { new: true }
+    );
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.json(updatedPost);
+  } catch (err) {
+    console.error(err);  
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getPostsByStatus = async (req, res) => {
+  const { status } = req.params;
+
+  if (status !== 'true' && status !== 'false') {
+    return res.status(400).json({ message: 'Invalid status value (true or false expected)' });
+  }
+
+  try {
+    const posts = await postModel.find({ postStatus: status });
+
+    if (!posts.length) {  
+      return res.status(404).json({ message: 'No posts found with that status' });
+    }
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 module.exports = {
   createPost,
@@ -226,4 +265,6 @@ module.exports = {
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
+  updatePostStatus,
+  getPostsByStatus,
 };

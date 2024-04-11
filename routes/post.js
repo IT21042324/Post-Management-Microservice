@@ -16,6 +16,8 @@ const {
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
+  updatePostStatus,
+  getPostsByStatus,
 } = require("../controller/post");
 
 // Create new post
@@ -61,6 +63,11 @@ router.patch("/visibilityList/:id", updateVisibilityMembersList);
 // Clear visibility members list by post ID
 router.patch("/visibilityList/clear/:id", clearVisibilityMembersList);
 
+// Update post status
+router.patch("/status/:id", updatePostStatus);
+
+// Get Posts by Status
+router.get("/status/:status", getPostsByStatus);
 
 // Export router
 module.exports = router;
