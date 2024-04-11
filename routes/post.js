@@ -13,6 +13,9 @@ const {
   getSinglePostWithDetails,
   getAllPostIdWithUserID,
   deletePostById,
+  updateVisibility,
+  updateVisibilityMembersList,
+  clearVisibilityMembersList,
 } = require("../controller/post");
 
 // Create new post
@@ -48,6 +51,16 @@ router.patch("/:id", updatePostById);
 
 //Delete a post by ID
 router.delete("/:id", deletePostById);
+
+//update post visibility
+router.patch("/visibility/:id", updateVisibility);
+
+// Update visibility members list by post ID
+router.patch("/visibilityList/:id", updateVisibilityMembersList);
+
+// Clear visibility members list by post ID
+router.patch("/visibilityList/clear/:id", clearVisibilityMembersList);
+
 
 // Export router
 module.exports = router;

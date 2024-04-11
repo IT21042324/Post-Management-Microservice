@@ -135,6 +135,82 @@ const getAllPostIdWithUserID = async (req, res) => {
   }
 };
 
+//visibility of the post
+
+const updateVisibility = async (req, res) => {
+  const { visibility } = req.body;
+  const postId = req.params.id;
+
+  try {
+    // Validate visibility value
+    if (visibility !== "public" && visibility !== "private") {
+      return res.status(400).json({ error: "Visibility must be either 'public' or 'private'." });
+    }
+
+    let updatedPost;
+    if (visibility === "private") {
+      // If visibility is set to private, update the post's visibility and set visibilityMembersList
+      const { visibilityMembersList } = req.body;
+      updatedPost = await postModel.findByIdAndUpdate(
+        postId,
+        { visibility, visibilityMembersList },
+        { new: true }
+      );
+    } else {
+      // If visibility is set to public, update the post's visibility and clear visibilityMembersList
+      updatedPost = await postModel.findByIdAndUpdate(
+        postId,
+        { visibility, visibilityMembersList: [] }, // Clear visibilityMembersList
+        { new: true }
+      );
+    }
+    res.json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+const updateVisibilityMembersList = async (req, res) => {
+  const { visibilityMembersList } = req.body;
+  const postId = req.params.id;
+
+  try {
+    // Check if visibilityMembersList is provided
+    if (!visibilityMembersList || visibilityMembersList.length === 0) {
+      return res.status(400).json({ error: "Visibility members list cannot be empty." });
+    }
+
+    // Update post's visibility to private and set visibilityMembersList
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postId,
+      { visibility: "private", visibilityMembersList },
+      { new: true }
+    );
+    
+    res.json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+const clearVisibilityMembersList = async (req, res) => {
+  const postId = req.params.id;
+
+  try {
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postId,
+      { visibilityMembersList: [] },
+      { new: true }
+    );
+    res.json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -147,4 +223,7 @@ module.exports = {
   getAllPostWithDetails,
   getSinglePostWithDetails,
   getAllPostIdWithUserID,
+  updateVisibility,
+  updateVisibilityMembersList,
+  clearVisibilityMembersList,
 };

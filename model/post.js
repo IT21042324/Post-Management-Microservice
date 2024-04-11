@@ -56,14 +56,17 @@ const postSchema = new Schema(
     }, // if the post is blocked, then we need to have a reason for it.
 
     visibility: {
-      type: String, //private or public
-      default: 1, // 1 for public and 0 for private
+      type: String,
+      enum: ["public", "private"],
+      default: "public", // Default visibility is public
     }, // this is to make sure that the post is archived and not visible to the public.
 
-    visibilityMembersList: {
-      type: Array,
-      default: [], // if the visibility is set to private, then we need to have a list of members who can view the post.
-    },
+    visibilityMembersList: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ], // if the visibility is set to private, then we need to have a list of members who can view the post.
 
     postedBy: {
       type: Schema.Types.ObjectId,
