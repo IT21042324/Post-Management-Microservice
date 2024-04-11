@@ -144,7 +144,9 @@ const updateVisibility = async (req, res) => {
   try {
     // Validate visibility value
     if (visibility !== "public" && visibility !== "private") {
-      return res.status(400).json({ error: "Visibility must be either 'public' or 'private'." });
+      return res
+        .status(400)
+        .json({ error: "Visibility must be either 'public' or 'private'." });
     }
 
     let updatedPost;
@@ -170,7 +172,6 @@ const updateVisibility = async (req, res) => {
   }
 };
 
-
 const updateVisibilityMembersList = async (req, res) => {
   const { visibilityMembersList } = req.body;
   const postId = req.params.id;
@@ -178,7 +179,9 @@ const updateVisibilityMembersList = async (req, res) => {
   try {
     // Check if visibilityMembersList is provided
     if (!visibilityMembersList || visibilityMembersList.length === 0) {
-      return res.status(400).json({ error: "Visibility members list cannot be empty." });
+      return res
+        .status(400)
+        .json({ error: "Visibility members list cannot be empty." });
     }
 
     // Update post's visibility to private and set visibilityMembersList
@@ -187,13 +190,12 @@ const updateVisibilityMembersList = async (req, res) => {
       { visibility: "private", visibilityMembersList },
       { new: true }
     );
-    
+
     res.json(updatedPost);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 const clearVisibilityMembersList = async (req, res) => {
   const postId = req.params.id;
@@ -209,7 +211,6 @@ const clearVisibilityMembersList = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 module.exports = {
   createPost,

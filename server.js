@@ -38,4 +38,8 @@ app.use("/api/users", userRouter);
 // Set up route for handling requests to /api/user endpoint
 app.use("/api/posts", postRouter);
 
+/*                                Extra Routes                                */
+/* -------------------------------------------------------------------------- */
+
+/* -------- Set up route for handling requests to /api/user endpoint -------- */
 app.use("/api/comments", commentRouter);
