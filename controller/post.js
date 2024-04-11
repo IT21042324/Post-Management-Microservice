@@ -3,8 +3,8 @@ const postModel = require("../model/post");
 const createPost = async (req, res) => {
   const post = req.body;
   post.postType =
-    post.postType.charAt(0).toUpperCase() +
-    post.postType.slice(1).toLowerCase()?.trim();
+    post?.postType?.charAt(0)?.toUpperCase() +
+    post?.postType?.slice(1)?.toLowerCase()?.trim();
 
   // Check if postType is valid
   const validPostTypes = [
@@ -66,10 +66,10 @@ const updatePostById = async (req, res) => {
     ];
 
     fieldsToUpdate.postType =
-      fieldsToUpdate.postType.charAt(0).toUpperCase() +
-      fieldsToUpdate.postType.slice(1).toLowerCase()?.trim();
+      fieldsToUpdate?.postType?.charAt(0)?.toUpperCase() +
+      fieldsToUpdate?.postType?.slice(1)?.toLowerCase()?.trim();
 
-    if (!validPostTypes.includes(post.postType)) {
+    if (!validPostTypes.includes(fieldsToUpdate.postType)) {
       return res.status(400).send("Invalid post type.");
     }
   }
