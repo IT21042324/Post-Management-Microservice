@@ -287,7 +287,6 @@ const createMultiplePosts = async (req, res) => {
 };
 
 //3. Get All Post IDS
-
 const getAllPostIDs = async (req, res) => {
   try {
     const posts = await postModel.find({}, { _id: 1 });
