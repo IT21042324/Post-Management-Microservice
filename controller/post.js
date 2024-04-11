@@ -2,6 +2,26 @@ const postModel = require("../model/post");
 
 const createPost = async (req, res) => {
   const post = req.body;
+  post.postType =
+    post.postType.charAt(0).toUpperCase() +
+    post.postType.slice(1).toLowerCase()?.trim();
+
+  // Check if postType is valid
+  const validPostTypes = [
+    "Text",
+    "Image",
+    "Video",
+    "Document",
+    "Event",
+    "Article",
+    "Poll",
+    "Posting",
+    "Job",
+  ];
+
+  if (!validPostTypes.includes(post.postType)) {
+    return res.status(400).send("Invalid post type.");
+  }
 
   try {
     const newPost = await postModel.create(post);
@@ -31,6 +51,28 @@ const getPostById = async (req, res) => {
 
 const updatePostById = async (req, res) => {
   fieldsToUpdate = req.body;
+
+  if (fieldsToUpdate?.postType) {
+    const validPostTypes = [
+      "Text",
+      "Image",
+      "Video",
+      "Document",
+      "Event",
+      "Article",
+      "Poll",
+      "Posting",
+      "Job",
+    ];
+
+    fieldsToUpdate.postType =
+      fieldsToUpdate.postType.charAt(0).toUpperCase() +
+      fieldsToUpdate.postType.slice(1).toLowerCase()?.trim();
+
+    if (!validPostTypes.includes(post.postType)) {
+      return res.status(400).send("Invalid post type.");
+    }
+  }
 
   try {
     const updatedPost = await postModel.findByIdAndUpdate(

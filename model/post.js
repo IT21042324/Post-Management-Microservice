@@ -15,6 +15,17 @@ const postSchema = new Schema(
 
     postType: {
       type: String,
+      enum: [
+        "Text",
+        "Image",
+        "Video",
+        "Document",
+        "Article",
+        "Event",
+        "Poll",
+        "Posting",
+        "Job",
+      ],
       required: true,
     },
 
