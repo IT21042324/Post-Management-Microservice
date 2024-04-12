@@ -108,3 +108,36 @@ describe('Test GET /posts/6617b5fb673289a38b7b7a04/tags', () => {
       });
     });
       
+    describe('Test GET /posts/status/true', () => {
+        it('should return posts with a valid status (true or false)', async () => {
+          const validStatus = 'true'; // Or 'false' depending on your status definition
+      
+          const response = await request(app)
+            .get(`/posts/status/${validStatus}`);
+      
+          expect(response.status).toBe(200);
+          expect(response.body).toBeInstanceOf(Array); // Ensure an array of posts is returned
+          // Additional assertions can be made about the response data, like checking post properties
+        });
+      
+        it('should return 400 for an invalid status value', async () => {
+          const invalidStatus = 'invalid'; // Not 'true' or 'false'
+      
+          const response = await request(app)
+            .get(`/posts/status/${invalidStatus}`);
+      
+          expect(response.status).toBe(400);
+          expect(response.body).toHaveProperty('message'); // Expect error message
+        });
+      
+        it('should return 404 for no posts with that status', async () => {
+          const unlikelyStatus = 'unlikely'; // A status unlikely to exist
+      
+          const response = await request(app)
+            .get(`/posts/status/${unlikelyStatus}`);
+      
+          expect(response.status).toBe(404);
+          expect(response.body).toHaveProperty('message'); // Expect error message about no posts found
+        });
+      });
+      
