@@ -1,7 +1,14 @@
 const request = require("supertest");
-const app = require("../server.js");
 
 // const postId = "66159a338ed99899cf2d93c2";
+
+const { app, startServer } = require("../server.js");
+
+let server;
+
+beforeAll(async () => {
+  server = await startServer(); // Start the server before all tests
+});
 
 describe("Test addEmoji endpoint", () => {
   it("should add emoji to a post", async () => {
@@ -63,4 +70,13 @@ describe("Test getAllReactions endpoint", () => {
     expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
   });
+});
+
+afterAll((done) => {
+  if (server) {
+    server.close(() => {
+      console.log("Server closed successfully");
+      done(); // Ensure Jest waits for the server to close before finishing
+    });
+  }
 });
