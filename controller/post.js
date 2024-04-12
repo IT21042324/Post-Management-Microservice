@@ -303,49 +303,10 @@ const clearVisibilityMembersList = async (req, res) => {
   }
 };
 
- 
-
-//Extra Endpoint
-//1. Get all postID with UserIds
-
-const getAllPostIdWithUserID = async (req, res) => {
-  try {
-    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
-    res.json(posts);
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
-
-//2. Create Multiple Posts
-
-const createMultiplePosts = async (req, res) => {
-  const posts = req.body;
-
-  try {
-    const newPosts = await postModel.create(posts);
-    res.json(newPosts);
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
-
-//3. Get All Post IDS
-const getAllPostIDs = async (req, res) => {
-  try {
-    const posts = await postModel.find({}, { _id: 1 });
-    res.json(posts.map((post) => post._id));
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
-//get all tags 
+//get all tags
 const getPostTags = async (req, res) => {
   try {
-    const post = await postModel.findById(req.params.id).select('tags');
+    const post = await postModel.findById(req.params.id).select("tags");
     res.json(post.tags);
   } catch (err) {
     res.send(err.message);
@@ -380,13 +341,13 @@ const deleteTag = async (req, res) => {
   } catch (err) {
     res.send(err.message);
   }
-}
+};
 
 //update post status
 const updatePostStatus = async (req, res) => {
   const { postStatus, reasonForBlocking } = req.body;
   const postId = req.params.id;
- 
+
   try {
     const updatedPost = await postModel.findByIdAndUpdate(
       postId,
@@ -398,29 +359,68 @@ const updatePostStatus = async (req, res) => {
     }
     res.json(updatedPost);
   } catch (err) {
-    console.error(err);  
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
- 
+
 //get posts by status
 const getPostsByStatus = async (req, res) => {
   const { status } = req.params;
- 
-  if (status !== 'true' && status !== 'false') {
-    return res.status(400).json({ message: 'Invalid status value (true or false expected)' });
+
+  if (status !== "true" && status !== "false") {
+    return res
+      .status(400)
+      .json({ message: "Invalid status value (true or false expected)" });
   }
- 
+
   try {
     const posts = await postModel.find({ postStatus: status });
- 
-    if (!posts.length) {  
-      return res.status(404).json({ message: 'No posts found with that status' });
+
+    if (!posts.length) {
+      return res
+        .status(404)
+        .json({ message: "No posts found with that status" });
     }
     res.json(posts);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//Extra Endpoint
+//1. Get all postID with UserIds
+
+const getAllPostIdWithUserID = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
+    res.json(posts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//2. Create Multiple Posts
+
+const createMultiplePosts = async (req, res) => {
+  const posts = req.body;
+
+  try {
+    const newPosts = await postModel.create(posts);
+    res.json(newPosts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//3. Get All Post IDS
+const getAllPostIDs = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { _id: 1 });
+    res.json(posts.map((post) => post._id));
+  } catch (err) {
+    res.send(err.message);
   }
 };
 
