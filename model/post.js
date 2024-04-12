@@ -15,6 +15,17 @@ const postSchema = new Schema(
 
     postType: {
       type: String,
+      enum: [
+        "Text",
+        "Image",
+        "Video",
+        "Document",
+        "Article",
+        "Event",
+        "Poll",
+        "Posting",
+        "Job",
+      ],
       required: true,
     },
 
@@ -71,6 +82,7 @@ const postSchema = new Schema(
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
 
     tags: {
@@ -83,15 +95,20 @@ const postSchema = new Schema(
 
 module.exports = mongoose.model("Post", postSchema);
 
-//Arani
-// postStatus
-// tags
+/* -------------------------------------------------------------------------- */
+/*                              Work Distribution                             */
+/* -------------------------------------------------------------------------- */
 
-// Kaushani
-// visibility and visibilitly members list
+/* ---------------------------------- Arani --------------------------------- */
+/* ------------------------------- postStatus ------------------------------- */
+/* ---------------------------------- tags ---------------------------------- */
 
-//Yohan
-// likes management and emojis
+/* -------------------------------- Kaushani -------------------------------- */
+/* ----------------- Visibility And Visibilitly Members List ---------------- */
 
-//Reezan
-//Comments
+/* ---------------------------------- Yohan --------------------------------- */
+/* ----------------------- Likes Management And Emojis ---------------------- */
+
+/* --------------------------------- Reezan --------------------------------- */
+/* -------------------------------- Comments -------------------------------- */
+/* ------------------------------- Search Posts ------------------------------ */
