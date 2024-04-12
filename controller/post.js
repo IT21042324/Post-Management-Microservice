@@ -303,10 +303,8 @@ const clearVisibilityMembersList = async (req, res) => {
   }
 };
 
-const getPostTags = async (req, res) => {
-  try {
-    const post = await postModel.findById(req.params.id).select('tags');
-    res.json(post.tags);
+ 
+
 //Extra Endpoint
 //1. Get all postID with UserIds
 
@@ -319,15 +317,6 @@ const getAllPostIdWithUserID = async (req, res) => {
   }
 };
 
-const updatePostTags = async (req, res) => {
-  const postId = req.params.id;
-  const updatedTags = req.body.tags;
-
-  try {
-    const post = await postModel.findById(postId);
-    post.tags = updatedTags;
-    const updatedPost = await post.save();
-    res.json(updatedPost);
 
 //2. Create Multiple Posts
 
@@ -342,6 +331,43 @@ const createMultiplePosts = async (req, res) => {
   }
 };
 
+
+//3. Get All Post IDS
+const getAllPostIDs = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { _id: 1 });
+    res.json(posts.map((post) => post._id));
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//get all tags 
+const getPostTags = async (req, res) => {
+  try {
+    const post = await postModel.findById(req.params.id).select('tags');
+    res.json(post.tags);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//update post tags
+const updatePostTags = async (req, res) => {
+  const postId = req.params.id;
+  const updatedTags = req.body.tags;
+
+  try {
+    const post = await postModel.findById(postId);
+    post.tags = updatedTags;
+    const updatedPost = await post.save();
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//delete tag
 const deleteTag = async (req, res) => {
   const postId = req.params.id;
   const tagIndex = req.params.tagIndex;
@@ -351,14 +377,50 @@ const deleteTag = async (req, res) => {
     post.tags.splice(tagIndex, 1);
     const updatedPost = await post.save();
     res.json(updatedPost);
-
-//3. Get All Post IDS
-const getAllPostIDs = async (req, res) => {
-  try {
-    const posts = await postModel.find({}, { _id: 1 });
-    res.json(posts.map((post) => post._id));
   } catch (err) {
     res.send(err.message);
+  }
+}
+
+//update post status
+const updatePostStatus = async (req, res) => {
+  const { postStatus, reasonForBlocking } = req.body;
+  const postId = req.params.id;
+ 
+  try {
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postId,
+      { postStatus, reasonForBlocking },
+      { new: true }
+    );
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.json(updatedPost);
+  } catch (err) {
+    console.error(err);  
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+ 
+//get posts by status
+const getPostsByStatus = async (req, res) => {
+  const { status } = req.params;
+ 
+  if (status !== 'true' && status !== 'false') {
+    return res.status(400).json({ message: 'Invalid status value (true or false expected)' });
+  }
+ 
+  try {
+    const posts = await postModel.find({ postStatus: status });
+ 
+    if (!posts.length) {  
+      return res.status(404).json({ message: 'No posts found with that status' });
+    }
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -383,4 +445,6 @@ module.exports = {
   getPostTags,
   updatePostTags,
   deleteTag,
+  updatePostStatus,
+  getPostsByStatus,
 };
