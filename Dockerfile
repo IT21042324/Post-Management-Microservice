@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Install app dependencies by copying the package files first
 COPY package*.json ./
