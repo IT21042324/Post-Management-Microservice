@@ -38,11 +38,15 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
+console.log(PORT);
+
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.URI);
     console.log("Connected to MongoDB");
   } catch (error) {
+    console.log(PORT);
+
     console.error("Failed to connect to MongoDB:", error);
     process.exit(1);
   }
