@@ -8,11 +8,11 @@ on:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
+    strategy: # To define a set of configurations for the job to run in.
+      matrix: # Child key of strategy. It creates an array of different job configurations 
         node-version: [20.x]  # Updated to match your local version
 
     steps:
@@ -28,9 +28,24 @@ jobs:
     - name: Install dependencies
       run: npm ci  # Use npm ci for a more reliable dependency install
 
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Run tests
       run: npm test
 
+  deploy:
+    name: Deploy
+    needs: test  # This job depends on the 'test' job
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Docker Login
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       
@@ -38,13 +53,3 @@ jobs:
       run: |
         docker build -t my-app:${{ github.sha }} .
         docker push my-app:${{ github.sha }}
-
-  deploy:
-    name: Deploy #This is the display name of the job. this will be shown in the github UI
-    needs: build  # This job depends on the 'build' job defined above. 
-    # The deploy job will not start until the build job has completed successfully.
-    runs-on: ubuntu-latest
-    steps: # This begins the list of steps that will be run in this job.
-    - name: Deployment step #  This is the display name of the step. It will be shown in the GitHub Actions UI.
-      run: echo "Add your deployment commands here" #This is the command that will be run in this step.
-      # In this case, it’s just echoing a string to the console. You would replace this with your actual deployment commands.
