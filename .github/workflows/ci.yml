@@ -28,6 +28,9 @@ jobs:
     - name: Install dependencies
       run: npm ci  # Use npm ci for a more reliable dependency install. run is used to execute a command in the shell
 
+    - name: Install dev dependencies
+      run: npm install --only=dev
+
   test:
     name: Test
     needs: build
