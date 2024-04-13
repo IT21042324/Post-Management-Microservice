@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,15 +16,17 @@ jobs:
         node-version: [20.x]  # Updated to match your local version
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'  # Optionally enable caching
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci  # Use npm ci for a more reliable dependency install
 
     - name: Run tests
       run: npm test
@@ -35,3 +38,13 @@ jobs:
       run: |
         docker build -t my-app:${{ github.sha }} .
         docker push my-app:${{ github.sha }}
+
+  deploy:
+    name: Deploy #This is the display name of the job. this will be shown in the github UI
+    needs: build  # This job depends on the 'build' job defined above. 
+    # The deploy job will not start until the build job has completed successfully.
+    runs-on: ubuntu-latest
+    steps: # This begins the list of steps that will be run in this job.
+    - name: Deployment step #  This is the display name of the step. It will be shown in the GitHub Actions UI.
+      run: echo "Add your deployment commands here" #This is the command that will be run in this step.
+      # In this case, it’s just echoing a string to the console. You would replace this with your actual deployment commands.
