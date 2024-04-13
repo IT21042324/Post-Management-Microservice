@@ -26,7 +26,7 @@ jobs:
         cache: 'npm'  # Optionally enable caching
 
     - name: Install dependencies
-      run: npm ci  # Use npm ci for a more reliable dependency install
+      run: npm ci  # Use npm ci for a more reliable dependency install. run is used to execute a command in the shell
 
   test:
     name: Test
@@ -35,7 +35,8 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2 # uses is used to specify an action to be executed as part of a 
+      # step in your job. part of a step means that the action will be executed in the same shell session as the step
 
     - name: Run tests
       run: npm test
