@@ -302,7 +302,6 @@ const clearVisibilityMembersList = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
  
 
 //Extra Endpoint
@@ -413,7 +412,7 @@ const getPostsByStatus = async (req, res) => {
  
   try {
     const posts = await postModel.find({ postStatus: status });
- 
+
     if (!posts.length) {  
       return res.status(404).json({ message: 'No posts found with that status' });
     }
@@ -445,6 +444,3 @@ module.exports = {
   getPostTags,
   updatePostTags,
   deleteTag,
-  updatePostStatus,
-  getPostsByStatus,
-};

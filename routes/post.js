@@ -26,6 +26,7 @@ const {
   getPostsByStatus,
  } = require("../controller/post");
 
+
 // Create new post
 router.post("/", createPost);
 
