@@ -443,4 +443,5 @@ module.exports = {
   clearVisibilityMembersList,
   getPostTags,
   updatePostTags,
-  deleteTag,
+  deleteTag
+}
