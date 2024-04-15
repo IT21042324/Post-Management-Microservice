@@ -48,9 +48,7 @@ const startServer = async () => {
   }
   // Start the server and return the instance
   return app.listen(PORT, () =>
-    console.log(
-      `Server running on port ${PORT}. Also checking if docker container is updated`
-    )
+    console.log(`Server is up and running on port ${PORT}.`)
   );
 };
 
