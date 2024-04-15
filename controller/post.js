@@ -338,6 +338,92 @@ const getAllPostIDs = async (req, res) => {
   }
 };
 
+//get all tags
+const getPostTags = async (req, res) => {
+  try {
+    const post = await postModel.findById(req.params.id).select("tags");
+    res.json(post.tags);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//update post tags
+const updatePostTags = async (req, res) => {
+  const postId = req.params.id;
+  const updatedTags = req.body.tags;
+
+  try {
+    const post = await postModel.findById(postId);
+    post.tags = updatedTags;
+    const updatedPost = await post.save();
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//delete tag
+const deleteTag = async (req, res) => {
+  const postId = req.params.id;
+  const tagIndex = req.params.tagIndex;
+
+  try {
+    const post = await postModel.findById(postId);
+    post.tags.splice(tagIndex, 1);
+    const updatedPost = await post.save();
+    res.json(updatedPost);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//update post status
+const updatePostStatus = async (req, res) => {
+  const { postStatus, reasonForBlocking } = req.body;
+  const postId = req.params.id;
+
+  try {
+    const updatedPost = await postModel.findByIdAndUpdate(
+      postId,
+      { postStatus, reasonForBlocking },
+      { new: true }
+    );
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.json(updatedPost);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//get posts by status
+const getPostsByStatus = async (req, res) => {
+  const { status } = req.params;
+
+  if (status !== "true" && status !== "false") {
+    return res
+      .status(400)
+      .json({ message: "Invalid status value (true or false expected)" });
+  }
+
+  try {
+    const posts = await postModel.find({ postStatus: status });
+
+    if (!posts.length) {
+      return res
+        .status(404)
+        .json({ message: "No posts found with that status" });
+    }
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -352,8 +438,13 @@ module.exports = {
   getSinglePostWithDetails,
   getAllPostIdWithUserID,
   createMultiplePosts,
+  updatePostStatus,
   getAllPostIDs,
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
+  getPostTags,
+  updatePostTags,
+  getPostsByStatus,
+  deleteTag,
 };

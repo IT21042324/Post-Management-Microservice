@@ -1,8 +1,14 @@
 const request = require("supertest");
-const app = require("../server"); // Import app
+const { app, startServer } = require("../server.js");
 
 let postId;
 let postedBy = "661580fea72308411e9c1e6d";
+
+let server;
+
+beforeAll(async () => {
+  server = await startServer(); // Start the server before all tests
+});
 
 describe("POST /api/posts", () => {
   it("should create a new post and return 200 status code", async () => {
@@ -71,4 +77,13 @@ describe("POST /api/posts", () => {
       expect(res.body._id).toEqual(postId);
     });
   });
+});
+
+afterAll((done) => {
+  if (server) {
+    server.close(() => {
+      console.log("Server closed successfully");
+      done(); // Ensure Jest waits for the server to close before finishing
+    });
+  }
 });

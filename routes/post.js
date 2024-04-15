@@ -16,10 +16,16 @@ const {
   updateVisibility,
   updateVisibilityMembersList,
   clearVisibilityMembersList,
+  getPostTags,
+  updatePostTags,
+  deleteTag,
   searchPost,
   createMultiplePosts,
   getAllPostIDs,
-} = require("../controller/post");
+  updatePostStatus,
+  getPostsByStatus,
+ } = require("../controller/post");
+
 
 // Create new post
 router.post("/", createPost);
@@ -71,7 +77,23 @@ router.patch("/:id/visibility", updateVisibility);
 router.patch("/:id/visibilityList", updateVisibilityMembersList);
 
 // Clear visibility members list by post ID
+router.patch("/visibilityList/clear/:id", clearVisibilityMembersList);
+
+// Get all tags for a post
+router.get("/:id/tags", getPostTags);
+
+// Update a post tags by ID
+router.patch("/:id/tags", updatePostTags);
+
+// Delete a tag from a post by ID
+router.delete("/:id/tags/:tagIndex", deleteTag);
+
 router.patch("/:id/visibilityList/clear", clearVisibilityMembersList);
 
+// Update post status
+router.patch("/status/:id", updatePostStatus);
+ 
+// Get Posts by Status
+router.get("/status/:status", getPostsByStatus);
 // Export router
 module.exports = router;

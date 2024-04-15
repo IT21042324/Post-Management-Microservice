@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../server"); // Import your app
+const { app, startServer } = require("../server.js");
 
 let postId;
 let userId = "661580fea72308411e9c1e6d";
@@ -7,6 +7,12 @@ let userId = "661580fea72308411e9c1e6d";
 // let commentId = "6617bd2695ab8d366df04e38";
 // let comment_desc =
 //   "Great post! I found your experiences in data science very insightful.";
+
+let server;
+
+beforeAll(async () => {
+  server = await startServer(); // Start the server before all tests
+});
 
 //Create a new post for the rest of the new operations
 describe("POST /api/posts", () => {
@@ -142,6 +148,14 @@ describe("DELETE /api/comments/:id", () => {
   });
 });
 
+afterAll((done) => {
+  if (server) {
+    server.close(() => {
+      console.log("Server closed successfully");
+      done(); // Ensure Jest waits for the server to close before finishing
+    });
+  }
+});
 // //To delete the created user at the end
 // describe("DELETE /api/users/:id", () => {
 //   it("should delete a user and return 200 status code", async () => {
