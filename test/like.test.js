@@ -3,6 +3,7 @@ const request = require("supertest");
 // const postId = "66159a338ed99899cf2d93c2";
 
 const { app, startServer } = require("../server.js");
+const { default: mongoose } = require("mongoose");
 
 let server;
 
@@ -74,7 +75,8 @@ describe("Test getAllReactions endpoint", () => {
 
 afterAll((done) => {
   if (server) {
-    server.close(() => {
+    server.close(async () => {
+      await mongoose.connection.close();
       console.log("Server closed successfully");
       done(); // Ensure Jest waits for the server to close before finishing
     });

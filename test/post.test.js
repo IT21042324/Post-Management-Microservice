@@ -1,5 +1,6 @@
 const request = require("supertest");
 const { app, startServer } = require("../server.js");
+const { default: mongoose } = require("mongoose");
 
 let postId;
 let postedBy = "661580fea72308411e9c1e6d";
@@ -81,7 +82,8 @@ describe("POST /api/posts", () => {
 
 afterAll((done) => {
   if (server) {
-    server.close(() => {
+    server.close(async () => {
+      await mongoose.connection.close();
       console.log("Server closed successfully");
       done(); // Ensure Jest waits for the server to close before finishing
     });
