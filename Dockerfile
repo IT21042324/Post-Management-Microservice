@@ -4,6 +4,18 @@ FROM node:20-alpine
 # Set the working directory
 WORKDIR /usr/src/app
 
+# Set environment variables
+ARG PORT
+ARG URI
+ARG SECRET
+ARG DOCKER_USERNAME
+ARG DOCKER_PASSWORD
+ENV PORT=$PORT
+ENV URI=$URI
+ENV SECRET=$SECRET
+ENV DOCKER_USERNAME=$DOCKER_USERNAME
+ENV DOCKER_PASSWORD=$DOCKER_PASSWORD
+
 # Install app dependencies by copying the package files first
 COPY package*.json ./
 RUN npm install
