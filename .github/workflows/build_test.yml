@@ -20,6 +20,10 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]  # Define Node.js version to test across
+    env:  # Define environment variables for the build and test job
+      PORT: ${{ secrets.PORT }}
+      URI: ${{ secrets.URI }}
+      SECRET: ${{ secrets.SECRET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
