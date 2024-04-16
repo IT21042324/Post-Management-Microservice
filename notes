@@ -51,8 +51,6 @@ This setup allows for scalable and flexible deployment architectures, as you can
 run
 13.48.190.136:3000/api/posts/ => ip address keeps changing everytime i stop and start the server.
 
-check 1 with server instance turned off
-
 some docker commands
 
 docker run -d -p 3000:3000 --name myapp 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
