@@ -83,10 +83,11 @@ jobs:
           script: |
             aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 992382603646.dkr.ecr.eu-north-1.amazonaws.com
             docker pull 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
+            if docker inspect my-container &> /dev/null; then
             if [ $(docker inspect -f '{{.State.Running}}' my-container) = "true" ]; then
               docker stop my-container
             fi
-            if [ $(docker inspect -f '{{.Id}}' my-container) ]; then
-              docker rm my-container
+            docker rm my-container
             fi
             docker run -d --name my-container -p 3000:3000 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
+
