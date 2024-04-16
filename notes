@@ -46,3 +46,11 @@ Example Scenario:
 Imagine you have an application packaged as a Docker container. You build this Docker image in your CI/CD pipeline and push it to ECR. When you're ready to deploy, you provision an EC2 instance (or use an existing one), pull the latest image from ECR, and run it on the EC2 instance. The EC2 instance serves as the host where the Docker container runs, using the image stored in ECR.
 
 This setup allows for scalable and flexible deployment architectures, as you can use various EC2 instance types and sizes depending on the demand and load expected on your application.
+
+
+run
+13.48.190.136:3000/api/posts/
+
+some docker commands
+
+docker run -d -p 3000:3000 --name myapp 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
