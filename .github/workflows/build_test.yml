@@ -89,5 +89,5 @@ jobs:
             fi
             docker rm my-container
             fi
-            docker run -d --name my-container -p 3000:3000 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
+            docker run -d --name my-container -p 4000:3000 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
 
