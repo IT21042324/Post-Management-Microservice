@@ -81,8 +81,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 992382603646.dkr.ecr.eu-north-1.amazonaws.com
-            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-            docker stop my-container || true
-            docker rm my-container || true
-            docker run -d --name my-container -p 3000:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 992382603646.dkr.ecr.eu-north-1.amazonaws.com
+            docker pull 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
+            if [ $(docker inspect -f '{{.State.Running}}' my-container) = "true" ]; then
+              docker stop my-container
+            fi
+            if [ $(docker inspect -f '{{.Id}}' my-container) ]; then
+              docker rm my-container
+            fi
+            docker run -d --name my-container -p 3000:3000 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
