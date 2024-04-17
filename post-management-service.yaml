@@ -1,0 +1,36 @@
+# This is the API version. "v1" is the version of the core Kubernetes API.
+apiVersion: v1
+
+# This is the kind of Kubernetes object you're creating. In this case, it's a Service.
+kind: Service
+
+# Metadata about the object, including its unique name.
+metadata:
+  # The name of the Service.
+  name: post-management-microservice-service
+
+# The desired state of the object.
+spec:
+  # A selector determines which Pods are targeted by this Service.
+  selector:
+    # This Service targets any Pods with a label "app" that has the value "post-management-microservice".
+    app: post-management-microservice
+
+  # The type of this Service. 'NodePort' means the Service is exposed on a certain port on each Node in the cluster.
+  type: LoadBalancer
+
+  # A list of ports to expose from the selected Pods.
+  ports:
+  - # The protocol for this port. Defaults to "TCP".
+    protocol: TCP
+
+    # The port on which the Service is exposed inside the cluster. Other applications within the cluster will use this port to communicate with the Service.
+    port: 3000
+
+    # The port on which the application inside the Pod is listening. When a request comes into the Service on the 'port', it's forwarded to the 'targetPort' on the Pod.
+    targetPort: 3000
+
+    # The port on which the Service is exposed on each Node in the cluster. Traffic that comes in on this port (on any Node in the cluster) is forwarded to the Service. This is only applicable if the Service 'type' is set to 'NodePort'.
+    # nodePort: 30333
+
+  

@@ -1,0 +1,53 @@
+# This is the API version. "apps/v1" is the version of the Kubernetes API used to create a Deployment.
+apiVersion: apps/v1
+
+# This is the kind of Kubernetes object you're creating. In this case, it's a Deployment.
+kind: Deployment
+
+# Metadata about the object, including its unique name and labels.
+metadata:
+  # The name of the Deployment.
+  name: post-management-microservice-deployment
+
+  # Labels help to organize and select subsets of objects.
+  labels:
+    # The application this Deployment belongs to.
+    app: post-management-microservice
+
+# The desired state of the object.
+spec:
+  # The number of replicas (Pods) you want this Deployment to maintain.
+  replicas: 2
+
+  # A selector that determines which Pods are managed by this Deployment.
+  selector:
+    # This Deployment manages any Pods with a label "app" that has the value "post-management-microservice".
+    matchLabels:
+      app: post-management-microservice
+
+  # A template for creating the Pods. This template is used to create each replica.
+  template:
+    metadata:
+      # Labels to apply to each Pod created from this template.
+      labels:
+        app: post-management-microservice
+
+    # Specification for the containers to be run in the Pods.
+    spec:
+      containers:
+      - # The name of the container.
+        name: post-management-microservice
+
+        # The Docker image to use for this container.
+        image: 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
+
+        # List of port numbers on which the container will listen for connections.
+        ports:
+        - # The port number to expose on the container.
+          containerPort: 3000
+
+      #Use the secret in the Deployment:
+      imagePullSecrets:
+      - name: regcred
+
+
