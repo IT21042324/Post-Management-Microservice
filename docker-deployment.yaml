@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-microservice-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: post-microservice
+  template:
+    metadata:
+      labels:
+        app: post-microservice
+    spec:
+      containers:
+      - name: post-microservice-container
+        image: yohanchabiduperera/microserviceapp:latest
+        ports:
+        - containerPort: 3000
