@@ -9,7 +9,7 @@ on:
 env:
   AWS_REGION: eu-north-1  # Specify your AWS region
   ECR_REPOSITORY: post-management-microserive-repo  # Your Amazon ECR repository name
-  ECS_TASK_DEFINITION: arn:aws:ecs:eu-north-1:992382603646:task-definition/my-task-def:1
+  ECS_TASK_DEFINITION: my-task-def
   ECS_SERVICE: my-ecs-service  # ECS service name
   ECS_CLUSTER: myCluster  # ECS cluster name
   CONTAINER_NAME: post-management-container  # The container name in the ECS task definition
