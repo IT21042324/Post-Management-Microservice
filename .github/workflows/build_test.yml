@@ -7,20 +7,24 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: eu-north-1  # Specifies the AWS region for deployments
-  ECR_REPOSITORY: post-management-microservice  # Static repository name
+  AWS_REGION: eu-north-1
+  ECR_REPOSITORY: post-management-microserive-repo
+  ECS_TASK_DEFINITION: my-task-def
+  ECS_SERVICE: my-ecs-service
+  ECS_CLUSTER: myCluster
+  CONTAINER_NAME: post-management-container
 
 permissions:
-  id-token: write  # Allows GitHub Actions to interact with AWS via OIDC
-  contents: read  # Allows GitHub Actions to checkout the repository
+  id-token: write
+  contents: read
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x]  # Define Node.js version to test across
-    env:  # Define environment variables for the build and test job
+        node-version: [20.x]
+    env:
       PORT: ${{ secrets.PORT }}
       URI: ${{ secrets.URI }}
       SECRET: ${{ secrets.SECRET }}
@@ -38,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm test  # Tests will use the env variables defined above
+        run: npm test
 
   deploy:
     needs: build-and-test
@@ -58,15 +62,34 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
+        id: build-image
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           IMAGE_TAG: latest
+          IMAGE_SHA_TAG: ${{ github.sha }}
           PORT: ${{ secrets.PORT }}
           URI: ${{ secrets.URI }}
           SECRET: ${{ secrets.SECRET }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker build --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_SHA_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Docker images pushed to ECR:"
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
