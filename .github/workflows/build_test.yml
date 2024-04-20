@@ -8,6 +8,7 @@ on:
 
 env:
   AWS_REGION: eu-north-1  # Specify your AWS region
+  ECR_REGISTRY: public.ecr.aws/f9z6m2g1
   ECR_REPOSITORY: post-management-microserive-repo  # Your Amazon ECR repository name
   ECS_TASK_DEFINITION: my-task-def
   ECS_SERVICE: my-ecs-service  # ECS service name
@@ -66,7 +67,7 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}  # Using commit SHA for image tagging
         run: |
-          IMAGE_URI="${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
+          IMAGE_URI="${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
           echo "Building and pushing $IMAGE_URI"
           docker build -t $IMAGE_URI --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD .
           docker push $IMAGE_URI
