@@ -72,8 +72,11 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker build --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "Building and pushing $IMAGE_URI"
+          docker build --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "::set-output name=image::$IMAGE_URI"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
