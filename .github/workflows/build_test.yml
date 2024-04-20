@@ -69,26 +69,4 @@ jobs:
         run: |
           docker build --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Update EC2 instance
-        env:
-          ECR_REGISTRY: 992382603646.dkr.ecr.eu-north-1.amazonaws.com 
-          ECR_REPOSITORY: post-management-microservice
-          IMAGE_TAG: latest          
-        uses: appleboy/ssh-action@master
-        with:
-          host: ec2-13-53-216-66.eu-north-1.compute.amazonaws.com
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo service docker start
-            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 992382603646.dkr.ecr.eu-north-1.amazonaws.com
-            docker pull 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
-            if docker inspect my-container &> /dev/null; then
-            if [ $(docker inspect -f '{{.State.Running}}' my-container) = "true" ]; then
-              docker stop my-container
-            fi
-            docker rm my-container
-            fi
-            docker run -d --name my-container -p 3000:3000 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
-
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
