@@ -32,7 +32,7 @@
 
 //       const response = await request(app)
 //         .put(`/posts/${testPostId}/tags`)
-//         .send({ tags: updatedTags });
+//         .send({ tags: updatedTags }); //commented
 
 //       expect(response.status).toBe(200);
 //       expect(response.body).toHaveProperty('tags'); // Expect updated tags in response
