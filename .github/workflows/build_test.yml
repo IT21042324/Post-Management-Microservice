@@ -29,7 +29,7 @@ jobs:
       PORT: 3000
       URI: mongodb+srv://root:root@cluster0.ofgotrr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       SECRET: YARK@2000
-      BACKENDURI: my-ln-192837486.eu-north-1.elb.amazonaws.com
+      BACKENDURI: http://my-ln-192837486.eu-north-1.elb.amazonaws.com/
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
