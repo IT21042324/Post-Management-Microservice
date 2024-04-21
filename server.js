@@ -48,7 +48,7 @@ const startServer = async () => {
   }
   // Start the server and return the instance
   return app.listen(PORT, () =>
-    console.log(`Server is up running on port ${PORT}.`)
+    console.log(`Server is up and running on port ${PORT}.`)
   );
 };
 
