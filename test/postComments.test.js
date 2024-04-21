@@ -10,20 +10,31 @@ let userId = "661580fea72308411e9c1e6d";
 //   "Great post! I found your experiences in data science very insightful.";
 
 let server;
+let token;
 
 beforeAll(async () => {
   server = await startServer(); // Start the server before all tests
+
+  const response = await request(app).post("/api/users/login").send({
+    userName: "user2@example.com",
+    password: "password2",
+  });
+
+  token = "Bearer " + response.body.token;
 });
 
 //Create a new post for the rest of the new operations
 describe("POST /api/posts", () => {
   it("should create a new post and return 200 status code", async () => {
-    const res = await request(app).post("/api/posts").send({
-      postTitle: "Test Post",
-      description: "This is a test post",
-      postType: "Text",
-      postedBy: userId,
-    });
+    const res = await request(app)
+      .post("/api/posts")
+      .set("Authorization", token)
+      .send({
+        postTitle: "Test Post",
+        description: "This is a test post",
+        postType: "Text",
+        postedBy: userId,
+      });
     expect(res.statusCode).toEqual(200);
     expect(res.body.postTitle).toEqual("Test Post");
     expect(res.body.description).toEqual("This is a test post");
@@ -52,11 +63,14 @@ describe("POST /api/posts", () => {
 // Create a comment for the rest of the test cases..
 describe("POST /api/comments", () => {
   it("should create a new comment and return 200 status code", async () => {
-    const res = await request(app).post("/api/comments").send({
-      comment: "Test Comment",
-      postID: postId,
-      userID: userId,
-    });
+    const res = await request(app)
+      .post("/api/comments")
+      .set("Authorization", token)
+      .send({
+        comment: "Test Comment",
+        postID: postId,
+        userID: userId,
+      });
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.comment).toEqual("Test Comment");
@@ -72,7 +86,9 @@ describe("POST /api/comments", () => {
 // Test cases for fetchAllCommentsForPost
 describe("GET /api/posts/:id/comments", () => {
   it("should return all comments for a post and return 200 status code", async () => {
-    const res = await request(app).get(`/api/posts/${postId}/comments`);
+    const res = await request(app)
+      .get(`/api/posts/${postId}/comments`)
+      .set("Authorization", token);
     expect(res.statusCode).toEqual(200);
     expect(res.body.postID).toEqual(postId.toString());
   });
@@ -83,6 +99,7 @@ describe("PATCH /api/posts/:id/comments", () => {
   it("should add a comment to a post and return 200 status code", async () => {
     const res = await request(app)
       .patch(`/api/posts/${postId}/comments`)
+      .set("Authorization", token)
       .send({ commentID: commentId });
     expect(res.statusCode).toEqual(200);
     expect(res.body.comments).toContainEqual(commentId);
@@ -92,7 +109,9 @@ describe("PATCH /api/posts/:id/comments", () => {
 // Test cases for getSinglePostWithDetails
 describe("GET /api/posts/details/:id", () => {
   it("should return a single post with details and return 200 status code", async () => {
-    const res = await request(app).get(`/api/posts/details/${postId}`);
+    const res = await request(app)
+      .get(`/api/posts/details/${postId}`)
+      .set("Authorization", token);
     expect(res.statusCode).toEqual(200);
     expect(res.body._id).toEqual(postId.toString());
 
@@ -108,6 +127,7 @@ describe("PATCH /api/posts/:id/comments/delete", () => {
   it("should remove a comment from a post and return 200 status code", async () => {
     const res = await request(app)
       .patch(`/api/posts/${postId}/comments/delete`)
+      .set("Authorization", token)
       .send({ commentID: commentId });
     expect(res.statusCode).toEqual(200);
     expect(res.body.comments).not.toContainEqual(commentId);
@@ -119,6 +139,7 @@ describe("GET /api/posts/search", () => {
   it("should return posts that match the search query and return 200 status code", async () => {
     const res = await request(app)
       .get("/api/posts/search")
+      .set("Authorization", token)
       .send({ searchQuery: "Test" });
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -134,7 +155,9 @@ describe("GET /api/posts/search", () => {
 //To delete the test case at the end
 describe("DELETE /api/posts/:id", () => {
   it("should delete a post and return 200 status code", async () => {
-    const res = await request(app).delete(`/api/posts/${postId}`);
+    const res = await request(app)
+      .delete(`/api/posts/${postId}`)
+      .set("Authorization", token);
     expect(res.statusCode).toEqual(200);
     expect(res.body._id).toEqual(postId);
   });
@@ -143,7 +166,9 @@ describe("DELETE /api/posts/:id", () => {
 //To delete the created comment at the end
 describe("DELETE /api/comments/:id", () => {
   it("should delete a comment and return 200 status code", async () => {
-    const res = await request(app).delete(`/api/comments/${commentId}`);
+    const res = await request(app)
+      .delete(`/api/comments/${commentId}`)
+      .set("Authorization", token);
     expect(res.statusCode).toEqual(200);
     expect(res.body._id).toEqual(commentId);
   });

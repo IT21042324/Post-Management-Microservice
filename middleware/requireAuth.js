@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const requireAuth = async (req, res, next) => {
   const backendUrl = process.env.BACKENDURI || "http://localhost:3000";
-  //   const backendUrl = "http://localhost:3000";
+  // const backendUrl = "http://localhost:3000";
 
   const { authorization } = req.headers;
 
