@@ -69,9 +69,15 @@ jobs:
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f9z6m2g1
 
+          # Pull the latest image to get cached layers
+          docker pull $IMAGE_URI || true
+
           IMAGE_URI="${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
           echo "Building and pushing $IMAGE_URI"
-          docker build -t $IMAGE_URI --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD .
+          
+          # Build the Docker image, using cached layers from the pulled image
+          docker build -t $IMAGE_URI --cache-from $IMAGE_URI --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD .
+
           docker push $IMAGE_URI
           echo "::set-output name=image::$IMAGE_URI"
 
