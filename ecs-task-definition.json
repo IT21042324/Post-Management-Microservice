@@ -15,28 +15,6 @@
                     "protocol": "tcp"
                 }
             ],
-            "environment": [
-                {
-                    "name": "PORT",
-                    "value": "3000"
-                },
-                {
-                    "name": "URI",
-                    "value": "mongodb+srv://root:root@cluster0.ofgotrr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-                },
-                {
-                    "name": "SECRET",
-                    "value": "YARK@2000"
-                },
-                {
-                    "name": "DOCKER_USERNAME",
-                    "value": "it21042324"
-                },
-                {
-                    "name": "DOCKER_PASSWORD",
-                    "value": "YARK@2000"
-                }
-            ],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
