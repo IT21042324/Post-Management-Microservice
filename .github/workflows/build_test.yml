@@ -29,6 +29,7 @@ jobs:
       PORT: 3000
       URI: mongodb+srv://root:root@cluster0.ofgotrr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       SECRET: YARK@2000
+      BACKENDURI: my-ln-192837486.eu-north-1.elb.amazonaws.com
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -76,7 +77,7 @@ jobs:
           echo "Building and pushing $IMAGE_URI"
           
           # Build the Docker image, using cached layers from the pulled image
-          docker build -t $IMAGE_URI --cache-from $IMAGE_URI --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD .
+          docker build -t $IMAGE_URI --cache-from $IMAGE_URI --build-arg PORT=$PORT --build-arg URI=$URI --build-arg SECRET=$SECRET --build-arg DOCKER_USERNAME=$DOCKER_USERNAME --build-arg DOCKER_PASSWORD=$DOCKER_PASSWORD --build-arg BACKENDURI=$BACKENDURI .
 
           docker push $IMAGE_URI
           echo "::set-output name=image::$IMAGE_URI"

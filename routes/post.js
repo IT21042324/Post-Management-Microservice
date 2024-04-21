@@ -1,4 +1,5 @@
 const router = require("express").Router();
+// const requireAuth = require("../middleware/requireAuth");
 
 // Importing the relevant functions from the post controller
 const {
@@ -24,9 +25,9 @@ const {
   getAllPostIDs,
   updatePostStatus,
   getPostsByStatus,
- } = require("../controller/post");
+} = require("../controller/post");
 
-
+// router.use(requireAuth);
 // Create new post
 router.post("/", createPost);
 
@@ -92,7 +93,7 @@ router.patch("/:id/visibilityList/clear", clearVisibilityMembersList);
 
 // Update post status
 router.patch("/status/:id", updatePostStatus);
- 
+
 // Get Posts by Status
 router.get("/status/:status", getPostsByStatus);
 // Export router

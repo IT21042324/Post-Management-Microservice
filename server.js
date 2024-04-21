@@ -25,8 +25,9 @@ const userRouter = require("./routes/user");
 const postRouter = require("./routes/post");
 const commentRouter = require("./routes/comment");
 const likeRouter = require("./routes/like");
+const requireAuth = require("./middleware/requireAuth");
 
-app.use("/api/posts", postRouter);
+app.use("/api/posts", requireAuth, postRouter);
 app.use("/api/users", userRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/likes", likeRouter);

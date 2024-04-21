@@ -15,6 +15,7 @@ ENV URI=$URI
 ENV SECRET=$SECRET
 ENV DOCKER_USERNAME=$DOCKER_USERNAME
 ENV DOCKER_PASSWORD=$DOCKER_PASSWORD
+ENV BACKENDURI=${BACKEND_URI}
 
 # Install app dependencies by copying the package files first
 COPY package*.json ./
