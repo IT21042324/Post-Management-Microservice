@@ -5,7 +5,6 @@ require("dotenv").config();
 const requireAuth = async (req, res, next) => {
   const backendUrl = process.env.BACKENDURI;
 
-  console.log(backendUrl);
   // const backendUrl = "http://localhost:3000";
 
   const { authorization } = req.headers;
@@ -26,7 +25,6 @@ const requireAuth = async (req, res, next) => {
     // Retrieve user data from API using the id and role from the token
     const { data } = await axios.get(`${backendUrl}/api/users/${id}`);
 
-    console.log(data);
     // Attach user data to the request object
     req.user = data;
 
