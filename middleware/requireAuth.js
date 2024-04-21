@@ -3,7 +3,9 @@ const axios = require("axios");
 require("dotenv").config();
 
 const requireAuth = async (req, res, next) => {
-  const backendUrl = process.env.BACKENDURI || "http://localhost:3000";
+  const backendUrl = process.env.BACKENDURI;
+
+  console.log(backendUrl);
   // const backendUrl = "http://localhost:3000";
 
   const { authorization } = req.headers;
@@ -20,8 +22,6 @@ const requireAuth = async (req, res, next) => {
   try {
     // Verify the token using the secret key
     const { id } = jwt.verify(token, process.env.SECRET);
-
-    console.log(id);
 
     // Retrieve user data from API using the id and role from the token
     const { data } = await axios.get(`${backendUrl}/api/users/${id}`);
