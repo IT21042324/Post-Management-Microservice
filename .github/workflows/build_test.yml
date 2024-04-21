@@ -29,8 +29,6 @@ jobs:
       PORT: 3000
       URI: mongodb+srv://root:root@cluster0.ofgotrr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       SECRET: YARK@2000
-      DOCKER_USERNAME: it21042324
-      DOCKER_PASSWORD: YARK@2000
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
