@@ -13,7 +13,7 @@ env:
   ECS_TASK_DEFINITION: ecs-task-definition.json  # ECS task definition file
   ECS_SERVICE: my-service  # ECS service name
   ECS_CLUSTER: myCluster  # ECS cluster name
-  CONTAINER_NAME: post-management-container  # The container name in the ECS task definition
+  CONTAINER_NAME: post-management-microservice-container  # The container name in the ECS task definition
 
 permissions:
   id-token: write
