@@ -25,6 +25,8 @@ const requireAuth = async (req, res, next) => {
     // Verify the token using the secret key
     const { id } = jwt.verify(token, secret);
 
+    console.log(id);
+
     // Retrieve user data from API using the id and role from the token
     const { data } = await axios.get(`${backendUrl}/api/users/${id}`);
 
