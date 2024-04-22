@@ -53,4 +53,4 @@ run
 
 some docker commands
 
-docker run -d -p 3000:3000 --name myapp 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest
+docker run -d -p 3000:3000 --name myapp 992382603646.dkr.ecr.eu-north-1.amazonaws.com/post-management-microservice:latest 
