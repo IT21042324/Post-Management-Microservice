@@ -1,81 +1,56 @@
 {
-    "taskDefinition": {
-        "taskDefinitionArn": "arn:aws:ecs:eu-north-1:992382603646:task-definition/my-task-def:18",
-        "containerDefinitions": [
-            {
-                "name": "post-management-microservice-container",
-                "image": "public.ecr.aws/f9z6m2g1/post-management-microserive-repo:latest",
-                "cpu": 0,
-                "portMappings": [
-                    {
-                        "containerPort": 3000,
-                        "hostPort": 3000,
-                        "protocol": "tcp",
-                        "name": "post-management-microservice-container-3000-tcp",
-                        "appProtocol": "http"
-                    }
-                ],
-                "essential": true,
-                "environment": [],
-                "environmentFiles": [],
-                "mountPoints": [],
-                "volumesFrom": [],
-                "ulimits": [],
-                "logConfiguration": {
-                    "logDriver": "awslogs",
-                    "options": {
-                        "awslogs-create-group": "true",
-                        "awslogs-group": "/ecs/my-task-def",
-                        "awslogs-region": "eu-north-1",
-                        "awslogs-stream-prefix": "ecs"
-                    },
-                    "secretOptions": []
+    "family": "my-task-def",
+    "networkMode": "awsvpc",
+    "executionRoleArn": "arn:aws:iam::992382603646:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "post-management-microservice-container",
+            "image": "public.ecr.aws/f9z6m2g1/post-management-microserive-repo:latest",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                    "name": "PORT",
+                    "value": "3000"
                 },
-                "systemControls": []
+                {
+                    "name": "URI",
+                    "value": "mongodb+srv://root:root@cluster0.ofgotrr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+                },
+                {
+                    "name": "SECRET",
+                    "value": "YARK@2000"
+                },
+                {
+                    "name": "DOCKER_USERNAME",
+                    "value": "it21042324"
+                },
+                {
+                    "name": "DOCKER_PASSWORD",
+                    "value": "YARK@2000"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/my-task-def",
+                    "awslogs-region": "eu-north-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
             }
-        ],
-        "family": "my-task-def",
-        "executionRoleArn": "arn:aws:iam::992382603646:role/ecsTaskExecutionRole",
-        "networkMode": "awsvpc",
-        "revision": 18,
-        "volumes": [],
-        "status": "ACTIVE",
-        "requiresAttributes": [
-            {
-                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-            },
-            {
-                "name": "ecs.capability.execution-role-awslogs"
-            },
-            {
-                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-            },
-            {
-                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-            },
-            {
-                "name": "ecs.capability.task-eni"
-            },
-            {
-                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
-            }
-        ],
-        "placementConstraints": [],
-        "compatibilities": [
-            "EC2",
-            "FARGATE"
-        ],
-        "runtimePlatform": {
-            "cpuArchitecture": "X86_64",
-            "operatingSystemFamily": "LINUX"
-        },
-        "requiresCompatibilities": [
-            "FARGATE"
-        ],
-        "cpu": "256",
-        "memory": "512",
-        "registeredAt": "2024-04-23T02:37:24.869000+05:30",
-        "registeredBy": "arn:aws:iam::992382603646:root"
-    },
-    "tags": []
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
 }

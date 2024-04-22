@@ -8,7 +8,7 @@ on:
 
 env:
   AWS_REGION: eu-north-1  # Specify your AWS region
-  ECR_REGISTRY: public.ecr.aws/f9z6m2g1
+  ECR_REGISTRY: public.ecr.aws/f9z6m2g1 
   ECR_REPOSITORY: post-management-microserive-repo  # Your Amazon ECR repository name
   ECS_TASK_DEFINITION: ecs-task-definition.json  # ECS task definition file
   ECS_SERVICE: my-service  # ECS service name
