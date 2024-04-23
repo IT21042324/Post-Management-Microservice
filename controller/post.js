@@ -424,6 +424,165 @@ const getPostsByStatus = async (req, res) => {
   }
 };
 
+// Likes Management
+
+const addEmoji = async (req, res) => {
+  try {
+    const { userId, emoji } = req.body;
+    const postId = req.params.postId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const post = await postModel.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const existingReaction = post.likes.find((like) => like.userID === userId);
+
+    if (existingReaction) {
+      existingReaction.emoji = emoji;
+    } else {
+      post.likes.push({ userID: userId, emoji: emoji });
+    }
+
+    await post.save();
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// const changeEmoji = async (req, res) => {
+//   try {
+//     const { userId, emoji } = req.body;
+//     const postId = req.params.postId;
+
+//     
+//     const post = await postModel.findById(postId);
+
+//     if (!post) {
+//       return res.status(404).json({ error: "Post not found" });
+//     }
+
+//     
+//     const existingReactionIndex = post.likes.findIndex(like => like.userID === userId);
+
+//     if (existingReactionIndex !== -1) {
+//       
+//       post.likes[existingReactionIndex].emoji = emoji;
+//     } else {
+//       
+//       post.likes.push({ userID: userId, emoji: emoji });
+//     }
+
+//     
+//     await post.save();
+
+//     res.sendStatus(200);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+const getEmojiCounts = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    const post = await postModel.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const emojiCounts = {};
+
+    // Iterate over the likes
+    for (let like of post.likes) {
+      if (emojiCounts[like.emoji]) {
+        emojiCounts[like.emoji]++;
+      } else {
+        emojiCounts[like.emoji] = 1;
+      }
+    }
+
+    const emojiCountsArray = Object.keys(emojiCounts).map((emoji) => ({
+      _id: emoji,
+      count: emojiCounts[emoji],
+    }));
+
+    res.json(
+      emojiCountsArray.length ? emojiCountsArray : [{ _id: null, count: 0 }]
+    );
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getTotalReactions = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    const post = await postModel.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const totalReactions = post.likes.length;
+
+    res.json({ totalReactions: totalReactions });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getAllReactions = async (req, res) => {
+  try {
+    const allReactions = await postModel.find({}, 'likes');
+
+    const flattenedReactions = allReactions.reduce((acc, cur) => {
+      acc.push(...cur.likes.map(like => ({ postId: cur._id.toString(), userId: like.userID, emoji: like.emoji })));
+      return acc;
+    }, []);
+
+    res.json(flattenedReactions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const removeEmoji = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const postId = req.params.postId;
+
+    const post = await postModel.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const likeIndex = post.likes.findIndex(like => like.userID === userId);
+
+    if (likeIndex === -1) {
+      return res.status(404).json({ error: "User reaction not found for this post" });
+    }
+
+    post.likes.splice(likeIndex, 1);
+
+    await post.save();
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -447,4 +606,9 @@ module.exports = {
   updatePostTags,
   getPostsByStatus,
   deleteTag,
+  getTotalReactions,
+  addEmoji,
+  getEmojiCounts,
+  getAllReactions,
+  removeEmoji
 };

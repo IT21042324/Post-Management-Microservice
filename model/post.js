@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+ const validEmojis = ['👍', '❤️', '😄', '😯', '😢'];
 
 const postSchema = new Schema(
   {
@@ -34,12 +35,12 @@ const postSchema = new Schema(
       type: [
         {
           userID: {
-            type: Schema.Types.ObjectId,
+            type: String,
             ref: "User",
           },
           emoji: {
-            type: Boolean,
-            default: 0,
+            type: String,
+            enum: validEmojis,
           },
         },
       ],

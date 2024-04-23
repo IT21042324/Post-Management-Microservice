@@ -25,6 +25,11 @@ const {
   getAllPostIDs,
   updatePostStatus,
   getPostsByStatus,
+  getTotalReactions,
+  addEmoji,
+  removeEmoji,
+  getEmojiCounts,
+  getAllReactions
 } = require("../controller/post");
 
 // router.use(requireAuth);
@@ -97,4 +102,26 @@ router.patch("/status/:id", updatePostStatus);
 // Get Posts by Status
 router.get("/status/:status", getPostsByStatus);
 // Export router
+
+
+// Likes Management 
+
+// Adding emoji per post
+router.patch("/reactions/add/:postId", addEmoji);
+
+// Counting the total number of reactions per post
+router.get("/reactions/total/:postId", getTotalReactions);
+
+// Counting number of each emoji per post
+router.get("/reactions/count/:postId", getEmojiCounts);
+
+// Emoji changing when selecting different emoji
+// router.patch("reactions/change/:postId", changeEmoji);
+
+// Removing emoji when deselecting
+router.patch("/reactions/delete/:postId", removeEmoji);
+
+// // Displaying all emojis and respective post and user
+router.get("/reactions/getall", getAllReactions);
+
 module.exports = router;

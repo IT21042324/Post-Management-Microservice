@@ -24,12 +24,12 @@ app.use(limiter);
 const userRouter = require("./routes/user");
 const postRouter = require("./routes/post");
 const commentRouter = require("./routes/comment");
-const likeRouter = require("./routes/like");
+// const likeRouter = require("./routes/like");
 
 app.use("/api/posts", postRouter);
 app.use("/api/users", userRouter);
 app.use("/api/comments", commentRouter);
-app.use("/api/likes", likeRouter);
+// app.use("/api/likes", likeRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
