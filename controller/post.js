@@ -303,41 +303,6 @@ const clearVisibilityMembersList = async (req, res) => {
   }
 };
 
-//Extra Endpoint
-//1. Get all postID with UserIds
-
-const getAllPostIdWithUserID = async (req, res) => {
-  try {
-    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
-    res.json(posts);
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
-//2. Create Multiple Posts
-
-const createMultiplePosts = async (req, res) => {
-  const posts = req.body;
-
-  try {
-    const newPosts = await postModel.create(posts);
-    res.json(newPosts);
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
-//3. Get All Post IDS
-const getAllPostIDs = async (req, res) => {
-  try {
-    const posts = await postModel.find({}, { _id: 1 });
-    res.json(posts.map((post) => post._id));
-  } catch (err) {
-    res.send(err.message);
-  }
-};
-
 //get all tags
 const getPostTags = async (req, res) => {
   try {
@@ -462,25 +427,25 @@ const addEmoji = async (req, res) => {
 //     const { userId, emoji } = req.body;
 //     const postId = req.params.postId;
 
-//     
+//
 //     const post = await postModel.findById(postId);
 
 //     if (!post) {
 //       return res.status(404).json({ error: "Post not found" });
 //     }
 
-//     
+//
 //     const existingReactionIndex = post.likes.findIndex(like => like.userID === userId);
 
 //     if (existingReactionIndex !== -1) {
-//       
+//
 //       post.likes[existingReactionIndex].emoji = emoji;
 //     } else {
-//       
+//
 //       post.likes.push({ userID: userId, emoji: emoji });
 //     }
 
-//     
+//
 //     await post.save();
 
 //     res.sendStatus(200);
@@ -543,10 +508,16 @@ const getTotalReactions = async (req, res) => {
 
 const getAllReactions = async (req, res) => {
   try {
-    const allReactions = await postModel.find({}, 'likes');
+    const allReactions = await postModel.find({}, "likes");
 
     const flattenedReactions = allReactions.reduce((acc, cur) => {
-      acc.push(...cur.likes.map(like => ({ postId: cur._id.toString(), userId: like.userID, emoji: like.emoji })));
+      acc.push(
+        ...cur.likes.map((like) => ({
+          postId: cur._id.toString(),
+          userId: like.userID,
+          emoji: like.emoji,
+        }))
+      );
       return acc;
     }, []);
 
@@ -567,10 +538,12 @@ const removeEmoji = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    const likeIndex = post.likes.findIndex(like => like.userID === userId);
+    const likeIndex = post.likes.findIndex((like) => like.userID === userId);
 
     if (likeIndex === -1) {
-      return res.status(404).json({ error: "User reaction not found for this post" });
+      return res
+        .status(404)
+        .json({ error: "User reaction not found for this post" });
     }
 
     post.likes.splice(likeIndex, 1);
@@ -580,6 +553,41 @@ const removeEmoji = async (req, res) => {
     res.sendStatus(200);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+//Extra Endpoint
+//1. Get all postID with UserIds
+
+const getAllPostIdWithUserID = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { postedBy: 1, _id: 1 });
+    res.json(posts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//2. Create Multiple Posts
+
+const createMultiplePosts = async (req, res) => {
+  const posts = req.body;
+
+  try {
+    const newPosts = await postModel.create(posts);
+    res.json(newPosts);
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+//3. Get All Post IDS
+const getAllPostIDs = async (req, res) => {
+  try {
+    const posts = await postModel.find({}, { _id: 1 });
+    res.json(posts.map((post) => post._id));
+  } catch (err) {
+    res.send(err.message);
   }
 };
 
@@ -610,5 +618,5 @@ module.exports = {
   addEmoji,
   getEmojiCounts,
   getAllReactions,
-  removeEmoji
+  removeEmoji,
 };

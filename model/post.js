@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
- const validEmojis = ['👍', '❤️', '😄', '😯', '😢'];
+const validEmojis = ["👍", "❤️", "😄", "😯", "😢"];
 
 const postSchema = new Schema(
   {
@@ -113,3 +113,4 @@ module.exports = mongoose.model("Post", postSchema);
 /* --------------------------------- Reezan --------------------------------- */
 /* -------------------------------- Comments -------------------------------- */
 /* ------------------------------- Search Posts ------------------------------ */
+//Hello
